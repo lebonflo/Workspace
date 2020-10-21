@@ -65,7 +65,7 @@
                             </button>
                         </div>
                         <div class="card-body">
-                            {{ post.content }}
+                            <pre>{{ post.content }}</pre>
                         </div>
                         <div class="card-footer">
                             <p class="float-left">{{ post.date_post }}</p>
@@ -128,8 +128,10 @@
                         </div>
                         <div class="modal-body p-4">
                             <form action="" method="POST">
-                                <textarea name="" id="textarea" v-model="textareaContent"</textarea>
-                                <textarea name="content" id="hidden" v-model="newPost.content">{{ textareaContent }}</textarea>
+                                <div class="container text-center">
+                                    <textarea id="textarea" v-model="newPost.content"></textarea>
+                                    <button type="button" class="btn btn-info mt-4" @click="addPostContent(); showOfferChoose=true;">Suivant</button>
+                                </div>
                                 <script type="application/javascript">
                                     tinymce.init({
                                         selector: '#textarea',
@@ -137,17 +139,15 @@
                                         plugins: 'advlist autolink lists link image charmap print preview hr anchor pagebreak',
                                         toolbar_mode: 'floating'
                                     });
-                                    // document.getElementById("hidden").value = document.getElementById("textarea");
                                 </script>
-                                <select class="form-control mt-3" name="offer" v-model="newPost.offer">
+                                <select class="form-control mt-3" name="offer" v-model="newPost.offer" v-if="showOfferChoose">
                                     <option value="gold">Gold</option>
                                     <option value="platinium">Platinium</option>
                                 </select>
                             </form>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-info"
-                                @click="showCreatePost=false; addPost();">Post</button>
+                            <button type="button" class="btn btn-info" @click="showCreatePost=false; addPost();" v-if="showOfferChoose">Post</button>
                         </div>
                     </div>
                 </div>

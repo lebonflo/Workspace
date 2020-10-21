@@ -8,6 +8,7 @@ const app = new Vue({
         showCreatePost: false,
         showEditPost: false,
         showDeletePost: false,
+        showOfferChoose: false,
         // CRUD Comment
         showComment: false, //showCommentById
         showEditComment: false,
@@ -19,7 +20,6 @@ const app = new Vue({
             offer: "",
         },
         currentPost: {},
-        textareaContent: ""
     },
     mounted: function () {
         this.getAllPosts();
@@ -37,21 +37,27 @@ const app = new Vue({
                     }
                 });
         },
+
+        addPostContent() {
+            let contentBody = tinymce.activeEditor.getContent();
+            app.newPost = { content: contentBody };
+        },
+
         addPost() {
             let formData = app.toFormData(app.newPost);
-            axios
-                .post('http://localhost/crud-vue/process-post.php?action=create', formData)
-                .then(function (response) {
-                    app.newPost = { content: "", offer: "" };
-                    if (response.data.error) {
-                        app.errorMsg = response.data.message;
-                    }
-                    else {
-                        app.successMsg = response.data.message;
-                        app.getAllPosts();
-                    }
-                });
+
+            axios.post('http://localhost/crud-vue/process-post.php?action=create', formData).then(function (response) {
+                app.newPost = { content: "", offer: "" };
+                if (response.data.error) {
+                    app.errorMsg = response.data.message;
+                }
+                else {
+                    app.successMsg = response.data.message;
+                    app.getAllPosts();
+                }
+            });
         },
+
         toFormData(obj) {
             let fd = new FormData();
             for (let i in obj) {
