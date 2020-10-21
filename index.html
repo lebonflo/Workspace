@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Workplace</title>
+    <link rel="icon" href="https://lptent.com/fr/wp-content/uploads/sites/2/2019/05/favicon.png?x70444"
+        sizes="192x192" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
         integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
@@ -42,18 +44,19 @@
 
             <!-- Alert message -->
             <div class="alert alert-danger" v-if='errorMsg'>
-                Error Message
+                {{ errorMsg }}
             </div>
             <div class="alert alert-success" v-if='successMsg'>
-                Success Message
+                {{ successMsg }}
             </div>
-
             <!-- Posts -->
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="card">
+                    <div class="card mb-4" v-for="post in posts">
                         <div class="card-header">
-                            Card Header
+                            <img src="https://lptent.com/fr/wp-content/uploads/sites/2/2019/05/favicon.png"
+                                alt="Lptent icone" style="max-height: 20px;">
+                            LPTENT FRANCE
                             <button class="btn btn-light float-right" @click="showEditPost=true">
                                 <i class="fas fa-edit"></i>
                             </button>
@@ -62,56 +65,58 @@
                             </button>
                         </div>
                         <div class="card-body">
-                            <h5 class="card-title">Card Title</h5>
-                            <p class="card-text">Card Text</p>
+                            {{ post.content }}
                         </div>
-                        <div class="card-footer text-center">
-                            <button class="btn btn-light">
-                                <i class="fas fa-thumbs-up"></i>&nbsp;Like
-                            </button>
-                            <button class="btn btn-light" @click="showComment=true">
-                                <i class="fas fa-comment"></i>&nbsp;Comment
-                            </button>
-                            <button class="btn btn-light">
+                        <div class="card-footer">
+                            <p class="float-left">{{ post.date_post }}</p>
+                            <button class="btn btn-light float-right">
                                 <i class="fas fa-share"></i>&nbsp;Share
                             </button>
+                            <button class="btn btn-light float-right" @click="showComment=true">
+                                <i class="fas fa-comment"></i>&nbsp;Comment
+                            </button>
+                            <button class="btn btn-light float-right">
+                                <i class="fas fa-thumbs-up"></i>&nbsp;Like
+                            </button>
+                        </div>
+
+                        <!-- Comments -->
+                        <div class="media mt-3" v-if="showComment">
+                            <div class="col">
+                                <div class="row">
+                                    <img src="https://eu.ui-avatars.com/api/?background=random&name=John+Doe&rounded=true"
+                                        class="mr-3" style="max-height: 64px;">
+                                    <div class="col-12 media-body">
+                                        <button type="button" class="close float-right" @click="showComment=false">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        <h5 class="mt-0">John Doe</h5>
+                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut deleniti optio
+                                            excepturi, hic laboriosam incidunt officiis et quasi, obcaecati quaerat qui
+                                            nemo
+                                            voluptas iusto sapiente, voluptatibus at nostrum atque aut!</p>
+                                        <button class="btn btn-light float-right" @click="showEditComment=true">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-light float-right" @click="showDeleteComment=true">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <form action="POST">
+                                    <div class="form-group mt-3">
+                                        <input type="text" class="form-control" placeholder="Comment...">
+                                    </div>
+                                </form>
+                            </div>
+                            <div />
                         </div>
                     </div>
 
-                    <!-- Comments -->
-                    <div class="media mt-3" v-if="showComment">
-                        <div class="col">
-                            <div class="row">
-                                <img src="https://eu.ui-avatars.com/api/?background=random&name=John+Doe&rounded=true" class="mr-3"
-                                    style="max-height: 64px;">
-                                <div class="media-body">
-                                    <h5 class="mt-0">John Doe</h5>
-                                    <button type="button" class="close" @click="showComment=false">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut deleniti optio
-                                        excepturi, hic laboriosam incidunt officiis et quasi, obcaecati quaerat qui nemo
-                                        voluptas iusto sapiente, voluptatibus at nostrum atque aut!</p>
-                                    <button class="btn btn-light float-right" @click="showEditComment=true">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="btn btn-light float-right" @click="showDeleteComment=true">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <form action="POST">
-                                <div class="form-group mt-3">
-                                    <input type="text" class="form-control" placeholder="Comment...">
-                                </div>
-                            </form>
-                        </div>
-                        <div />
-                    </div>
                 </div>
             </div>
 
-            <!-- Create New Post Modal -->
+            <!-- Create Post Modal -->
             <div id="overlay" v-if="showCreatePost">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
@@ -122,23 +127,27 @@
                             </button>
                         </div>
                         <div class="modal-body p-4">
-                            <form action="#" method="POST">
-                                <textarea name="content"></textarea>
+                            <form action="" method="POST">
+                                <textarea name="" id="textarea" v-model="textareaContent"</textarea>
+                                <textarea name="content" id="hidden" v-model="newPost.content">{{ textareaContent }}</textarea>
                                 <script type="application/javascript">
                                     tinymce.init({
-                                        selector: 'textarea',
+                                        selector: '#textarea',
+                                        statusbar: false,
                                         plugins: 'advlist autolink lists link image charmap print preview hr anchor pagebreak',
-                                        toolbar_mode: 'floating',
+                                        toolbar_mode: 'floating'
                                     });
+                                    // document.getElementById("hidden").value = document.getElementById("textarea");
                                 </script>
-                                <select class="form-control" name="offer">
+                                <select class="form-control mt-3" name="offer" v-model="newPost.offer">
                                     <option value="gold">Gold</option>
                                     <option value="platinium">Platinium</option>
                                 </select>
                             </form>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-info" @click="showCreatePost=false">Post</button>
+                            <button type="button" class="btn btn-info"
+                                @click="showCreatePost=false; addPost();">Post</button>
                         </div>
                     </div>
                 </div>
@@ -156,13 +165,15 @@
                         </div>
                         <div class="modal-body p-4">
                             <form action="#" method="POST">
-                                <textarea name="content"></textarea>
+                                <textarea id="textarea"></textarea>
+                                <textarea name="content" id="hidden" style="display: none;"></textarea>
                                 <script type="application/javascript">
                                     tinymce.init({
-                                        selector: 'textarea',
+                                        selector: '#textarea',
                                         plugins: 'advlist autolink lists link image charmap print preview hr anchor pagebreak',
                                         toolbar_mode: 'floating',
                                     });
+                                    document.getElementById("hidden").value = document.getElementById("textarea");
                                 </script>
                                 <select class="form-control" name="offer">
                                     <option value="gold">Gold</option>
@@ -241,6 +252,7 @@
             </div>
 
         </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.20.0/axios.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
         <script src="js/vue.js"></script>
 </body>

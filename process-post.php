@@ -12,7 +12,7 @@
     }
 
     if($action == 'read'){
-        $sql = $conn->query("SELECT * FROM revendeurs_post");
+        $sql = $conn->query("SELECT * FROM revendeurs_post ORDER BY date_post DESC");
         $posts = array();
         while($row = $sql->fetch_assoc()){
             array_push($posts, $row);
