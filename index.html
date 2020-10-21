@@ -65,13 +65,10 @@
                             </button>
                         </div>
                         <div class="card-body">
-                            <pre>{{ post.content }}</pre>
+                            <p v-html="post.content"></p>
                         </div>
                         <div class="card-footer">
                             <p class="float-left">{{ post.date_post }}</p>
-                            <button class="btn btn-light float-right">
-                                <i class="fas fa-share"></i>&nbsp;Share
-                            </button>
                             <button class="btn btn-light float-right" @click="showComment=true">
                                 <i class="fas fa-comment"></i>&nbsp;Comment
                             </button>
