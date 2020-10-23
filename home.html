@@ -16,6 +16,8 @@
     <link rel="stylesheet" href="css/stylesheet.css">
     <script src="https://cdn.tiny.cloud/1/lp1iscqvpzuicj04mclguyi1u2expcspphhgwmj9wupacnsq/tinymce/5/tinymce.min.js"
         referrerpolicy="origin"></script>
+
+
 </head>
 
 <body>
@@ -45,10 +47,17 @@
             <!-- Alert message -->
             <div class="alert alert-danger" v-if='errorMsg'>
                 {{ errorMsg }}
+                <button type="button" class="close" @click="errorMsg=false">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="alert alert-success" v-if='successMsg'>
                 {{ successMsg }}
+                <button type="button" class="close" @click="errorMsg=false">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
+
             <!-- Posts -->
             <div class="row">
                 <div class="col-lg-12">
@@ -57,10 +66,10 @@
                             <img src="https://lptent.com/fr/wp-content/uploads/sites/2/2019/05/favicon.png"
                                 alt="Lptent icone" style="max-height: 20px;">
                             LPTENT FRANCE
-                            <button class="btn btn-light float-right" @click="showEditPost=true">
+                            <button class="btn btn-light float-right" @click="showEditPost=true; selectPost(post);">
                                 <i class="fas fa-edit"></i>
                             </button>
-                            <button class="btn btn-light float-right" @click="showDeletePost=true">
+                            <button class="btn btn-light float-right" @click="showDeletePost=true; selectPost(post);">
                                 <i class="fas fa-trash-alt"></i>
                             </button>
                         </div>
@@ -127,7 +136,8 @@
                             <form action="" method="POST">
                                 <div class="container text-center">
                                     <textarea id="textarea" v-model="newPost.content"></textarea>
-                                    <button type="button" class="btn btn-info mt-4" @click="addPostContent(); showOfferChoose=true;">Suivant</button>
+                                    <button type="button" class="btn btn-info mt-4"
+                                        @click="addPostContent(); showOfferChoose=true;">Suivant</button>
                                 </div>
                                 <script type="application/javascript">
                                     tinymce.init({
@@ -137,14 +147,16 @@
                                         toolbar_mode: 'floating'
                                     });
                                 </script>
-                                <select class="form-control mt-3" name="offer" v-model="newPost.offer" v-if="showOfferChoose">
+                                <select class="form-control mt-3" name="offer" v-model="newPost.offer"
+                                    v-if="showOfferChoose">
                                     <option value="gold">Gold</option>
                                     <option value="platinium">Platinium</option>
                                 </select>
                             </form>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-info" @click="showCreatePost=false; addPost();" v-if="showOfferChoose">Post</button>
+                            <button type="button" class="btn btn-info"
+                                @click="showCreatePost=false; addPost();">Post</button>
                         </div>
                     </div>
                 </div>
@@ -155,31 +167,37 @@
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Delete Post</h5>
+                            <h5 class="modal-title">Edit Post</h5>
                             <button type="button" class="close" @click="showEditPost=false">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body p-4">
-                            <form action="#" method="POST">
-                                <textarea id="textarea"></textarea>
-                                <textarea name="content" id="hidden" style="display: none;"></textarea>
+                            <form action="" method="POST">
+                                <textarea name="content" v-model="currentPost.content" id="textarea"></textarea>
+                                <p>{{ currentPost.id }}</p>
+                                <button type="button" class="btn btn-info mt-4"
+                                    @click="updatePostContent(); showOfferChoose=true;">Suivant</button>
                                 <script type="application/javascript">
                                     tinymce.init({
                                         selector: '#textarea',
+                                        statusbar: false,
                                         plugins: 'advlist autolink lists link image charmap print preview hr anchor pagebreak',
-                                        toolbar_mode: 'floating',
+                                        toolbar_mode: 'floating'
                                     });
-                                    document.getElementById("hidden").value = document.getElementById("textarea");
                                 </script>
-                                <select class="form-control" name="offer">
-                                    <option value="gold">Gold</option>
-                                    <option value="platinium">Platinium</option>
-                                </select>
+                                <div v-if="showOfferChoose">
+                                    <input type="text" v-model="currentPost.id">
+                                    <select class="form-control mt-3" name="offer" v-model="currentPost.offer">
+                                        <option value="gold">Gold</option>
+                                        <option value="platinium">Platinium</option>
+                                    </select>
+                                </div>
                             </form>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-info" @click="showEditPost=false">Post</button>
+                            <button type="button" class="btn btn-info"
+                                @click="showEditPost=false; updatePost();">Post</button>
                         </div>
                     </div>
                 </div>
@@ -199,7 +217,8 @@
                             <h4>Are you sure want to delete this post?</h4>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-danger" @click="showDeletePost=false">Delete</button>
+                            <button type="button" class="btn btn-danger"
+                                @click="showDeletePost=false; deletePost();">Delete</button>
                         </div>
                     </div>
                 </div>
@@ -252,6 +271,8 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.20.0/axios.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
         <script src="js/vue.js"></script>
+
+
 </body>
 
 </html>

@@ -13,13 +13,13 @@ const app = new Vue({
         showComment: false, //showCommentById
         showEditComment: false,
         showDeleteComment: false,
-
         posts: {},
         newPost: {
             content: "",
             offer: "",
         },
         currentPost: {},
+        currentUser: {}
     },
     mounted: function () {
         this.getAllPosts();
@@ -43,11 +43,46 @@ const app = new Vue({
             app.newPost = { content: contentBody };
         },
 
+        updatePostContent() {
+            let contentBody = tinymce.activeEditor.getContent();
+            app.currentPost = { content: contentBody };
+        },
+
         addPost() {
             let formData = app.toFormData(app.newPost);
 
             axios.post('http://localhost/crud-vue/process-post.php?action=create', formData).then(function (response) {
                 app.newPost = { content: "", offer: "" };
+                if (response.data.error) {
+                    app.errorMsg = response.data.message;
+                }
+                else {
+                    app.successMsg = response.data.message;
+                    app.getAllPosts();
+                }
+            });
+        },
+
+        updatePost() {
+            let formData = app.toFormData(app.currentPost);
+
+            axios.post('http://localhost/crud-vue/process-post.php?action=update', formData).then(function (response) {
+                app.currentPost = { content: "", offer: "", id: "" };
+                if (response.data.error) {
+                    app.errorMsg = response.data.message;
+                }
+                else {
+                    app.successMsg = response.data.message;
+                    app.getAllPosts();
+                }
+            });
+        },
+
+        deletePost() {
+            let formData = app.toFormData(app.currentPost);
+
+            axios.post('http://localhost/crud-vue/process-post.php?action=delete', formData).then(function (response) {
+                app.currentPost = { content: "", offer: "", id: "" };
                 if (response.data.error) {
                     app.errorMsg = response.data.message;
                 }
@@ -65,6 +100,11 @@ const app = new Vue({
             }
             return fd;
         },
+
+        selectPost(post) {
+            app.currentPost = post;
+        },
+
     }
-})
+});
 

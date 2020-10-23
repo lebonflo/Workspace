@@ -20,6 +20,7 @@
         $result['posts'] = $posts;
     }
 
+
     if($action == 'create'){
         $content = $_POST['content'];
         $offer = $_POST['offer'];
@@ -61,6 +62,7 @@
             $result['message'] = "Failed to delete !";
         }
     }
+
 
     $conn->close();
     echo json_encode($result);
